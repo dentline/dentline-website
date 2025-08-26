@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DentLINE - 歯科医院の予約・受付をLINEでシンプルに</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Variables */
+        :root {
+            --primary-color: #00C300;
+            --primary-dark: #00A000;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-color: #e9ecef;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 70px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 50px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Section Base */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section:nth-child(even) {
+            background: var(--bg-light);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            color: var(--text-color);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 50px;
+        }
+
+        /* Service Section */
+        .problems-solutions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .problems, .solutions {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .problems h3, .solutions h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .problems h3 {
+            color: #dc3545;
+        }
+
+        .solutions h3 {
+            color: var(--primary-color);
+        }
+
+        .problems ul, .solutions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .problems li, .solutions li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .problems li:before {
+            content: "×";
+            color: #dc3545;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .solutions li:before {
+            content: "✓";
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .screenshot {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .benefit-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .price-note {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .pricing-features li {
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        /* Demo Section */
+        .demo-content {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Company Section */
+        .company-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .company-info {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .company-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .company-info dl {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 10px 20px;
+        }
+
+        .company-info dt {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .company-info dd {
+            color: var(--text-light);
+        }
+
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .contact-form h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-color);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .problems-solutions {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .company-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .company-info dl {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">DentLINE</a>
+            <nav class="nav">
+                <a href="#service">サービス</a>
+                <a href="#benefits">メリット</a>
+                <a href="#pricing">料金</a>
+                <a href="#demo">デモ</a>
+                <a href="#company">会社概要</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>歯科医院の予約・受付を<br>LINEでシンプルに</h1>
+                <p class="subtitle">患者様にも、スタッフにも、医院経営にもメリットをもたらす<br>LINE公式アカウント導入サービス</p>
+                <div class="hero-buttons">
+                    <a href="#demo" class="btn btn-primary">無料デモを見る</a>
+                    <a href="#company" class="btn btn-secondary">お問い合わせはこちら</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Section -->
+        <section id="service" class="section">
+            <div class="container">
+                <h2 class="section-title">サービス紹介</h2>
+                <div class="problems-solutions">
+                    <div class="problems">
+                        <h3>歯科医院の課題</h3>
+                        <ul>
+                            <li>電話予約の対応がスタッフの負担になっている</li>
+                            <li>キャンセル率が高く、予約管理が大変</li>
+                            <li>定期健診のリマインドが不十分で再来院が少ない</li>
+                            <li>患者様との連絡手段が限られている</li>
+                        </ul>
+                    </div>
+                    <div class="solutions">
+                        <h3>DentLINEで解決</h3>
+                        <ul>
+                            <li>LINE上で簡単に予約・変更・キャンセル</li>
+                            <li>自動リマインド機能でキャンセル率を大幅削減</li>
+                            <li>定期健診の時期をお知らせして再来院を促進</li>
+                            <li>患者様の身近なLINEで気軽にコミュニケーション</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="screenshot">
+                    <img src="https://via.placeholder.com/800x450/f8f9fa/333333?text=DentLINE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88" alt="DentLINE画面イメージ">
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="section">
+            <div class="container">
+                <h2 class="section-title">3つのメリット</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">👥</div>
+                        <h3>患者様に便利</h3>
+                        <p>24時間いつでもLINEから予約可能。電話が苦手な方や忙しい方でも気軽に予約できます。リマインド機能で予約忘れも防止できます。</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚡</div>
+                        <h3>スタッフに便利</h3>
+                        <p>電話対応の時間を大幅削減。予約管理が自動化されるため、患者様への治療に集中できます。業務効率が格段にアップします。</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📈</div>
+                        <h3>医院経営にメリット</h3>
+                        <p>キャンセル率の削減と再来院率の向上により、売上アップに貢献。患者満足度の向上で口コミ効果も期待できます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="section">
+            <div class="container">
+                <h2 class="section-title">料金プラン</h2>
+                <p class="section-subtitle">シンプルでわかりやすい料金体系</p>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>初期費用</h3>
+                        <div class="price">5万円〜</div>
+                        <p class="price-note">（税別・医院規模により変動）</p>
+                        <ul class="pricing-features">
+                            <li>LINE公式アカウント設定</li>
+                            <li>予約システム構築</li>
+                            <li>スタッフ向け操作研修</li>
+                            <li>運用開始サポート</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>月額サポート</h3>
+                        <div class="price">1〜3万円</div>
+                        <p class="price-note">（税別・プランにより変動）</p>
+                        <ul class="pricing-features">
+                            <li>システム運用・保守</li>
+                            <li>機能アップデート</li>
+                            <li>操作サポート</li>
+                            <li>データ分析レポート</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Section -->
+        <section id="demo" class="section">
+            <div class="container">
+                <h2 class="section-title">無料デモ体験</h2>
+                <div class="demo-content">
+                    <p style="margin-bottom: 30px; font-size: 1.2rem; color: var(--text-light);">実際のDentLINEの操作感を体験してみませんか？</p>
+                    <div class="qr-placeholder">
+                        <span>デモ用QRコード<br>（準備中）</span>
+                    </div>
+                    <p style="margin-bottom: 30px;">上記QRコードをスマートフォンで読み取ると、デモ版をお試しいただけます。</p>
+                    <a href="#company" class="btn btn-primary">詳しい資料をご請求</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Company Section -->
+        <section id="company" class="section">
+            <div class="container">
+                <h2 class="section-title">会社概要・お問い合わせ</h2>
+                <div class="company-grid">
+                    <div class="company-info">
+                        <h3>会社概要</h3>
+                        <dl>
+                            <dt>屋号</dt>
+                            <dd>DentLINE</dd>
+                            <dt>代表者</dt>
+                            <dd>○○ ○○</dd>
+                            <dt>所在地</dt>
+                            <dd>東京都○○区○○-○-○</dd>
+                            <dt>電話番号</dt>
+                            <dd>03-0000-0000</dd>
+                            <dt>メール</dt>
+                            <dd>info@dentline.jp</dd>
+                        </dl>
+                    </div>
+                    <div class="contact-form">
+                        <h3>お問い合わせフォーム</h3>
+                        <form>
+                            <div class="form-group">
+                                <label for="name">お名前 *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic">医院名</label>
+                                <input type="text" id="clinic" name="clinic">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">メールアドレス *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">電話番号</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">お問い合わせ内容</label>
+                                <textarea id="message" name="message" placeholder="ご質問やご相談内容をお書きください"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">送信する</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 DentLINE. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
