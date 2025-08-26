@@ -6,7 +6,7 @@
     <title>DentLINE - 歯科医院の予約・受付をLINEでシンプルに</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* Reset & Base Styles */
         * {
@@ -18,141 +18,367 @@
         body {
             font-family: 'Noto Sans JP', sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #1a1a1a;
             background-color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00C300, #00A000);
+            border-radius: 3px;
         }
 
         /* Variables */
         :root {
             --primary-color: #00C300;
             --primary-dark: #00A000;
-            --text-color: #333;
+            --primary-light: #E8F8E8;
+            --secondary-color: #FF6B6B;
+            --accent-color: #4ECDC4;
+            --text-color: #1a1a1a;
             --text-light: #666;
-            --bg-light: #f8f9fa;
-            --border-color: #e9ecef;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --text-lighter: #999;
+            --bg-light: #fafbfc;
+            --bg-glass: rgba(255, 255, 255, 0.25);
+            --border-color: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --gradient-primary: linear-gradient(135deg, #00C300 0%, #00A000 100%);
+            --gradient-secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         /* Header */
         .header {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow);
         }
 
         .header .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 70px;
+            height: 80px;
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-decoration: none;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
         }
 
         .nav {
             display: flex;
-            gap: 30px;
+            gap: 2rem;
+            align-items: center;
         }
 
         .nav a {
             text-decoration: none;
             color: var(--text-color);
             font-weight: 500;
-            transition: color 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            border-radius: 25px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            z-index: -1;
         }
 
         .nav a:hover {
-            color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav a:hover::before {
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* Main Content */
         .main {
-            margin-top: 70px;
+            margin-top: 80px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 2rem;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 100px 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .hero-content {
             text-align: center;
+            color: white;
+            z-index: 1;
+            animation: fadeInUp 1s ease;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--text-color);
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .hero .subtitle {
-            font-size: 1.3rem;
-            color: var(--text-light);
-            margin-bottom: 50px;
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 20px;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 15px 30px;
+            padding: 1rem 2.5rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px;
             font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
             cursor: pointer;
             display: inline-block;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: linear-gradient(45deg, #00C300, #00A000);
             color: white;
+            box-shadow: 0 10px 30px rgba(0, 195, 0, 0.3);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 195, 0, 0.4);
         }
 
         .btn-secondary {
-            background: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
+            background: var(--glass-bg);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Floating Elements */
+        .hero-float {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-float:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .hero-float:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .hero-float:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
         }
 
         /* Section Base */
         .section {
-            padding: 80px 0;
+            padding: 6rem 0;
+            position: relative;
         }
 
         .section:nth-child(even) {
@@ -161,46 +387,75 @@
 
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 60px;
-            color: var(--text-color);
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
         }
 
         .section-subtitle {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text-light);
-            margin-bottom: 50px;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Service Section */
         .problems-solutions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 60px;
+            gap: 4rem;
+            margin-bottom: 4rem;
         }
 
         .problems, .solutions {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            padding: 3rem;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .problems {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: white;
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        .solutions {
+            background: var(--gradient-primary);
+            color: white;
+            animation: fadeInRight 0.8s ease;
+        }
+
+        .problems:hover, .solutions:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
         }
 
         .problems h3, .solutions h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-
-        .problems h3 {
-            color: #dc3545;
-        }
-
-        .solutions h3 {
-            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
         }
 
         .problems ul, .solutions ul {
@@ -209,181 +464,268 @@
         }
 
         .problems li, .solutions li {
-            margin-bottom: 10px;
-            padding-left: 20px;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
             position: relative;
+            font-size: 1.1rem;
         }
 
         .problems li:before {
-            content: "×";
-            color: #dc3545;
-            font-weight: bold;
+            content: "❌";
             position: absolute;
             left: 0;
+            font-size: 1.2rem;
         }
 
         .solutions li:before {
-            content: "✓";
-            color: var(--primary-color);
-            font-weight: bold;
+            content: "✨";
             position: absolute;
             left: 0;
+            font-size: 1.2rem;
         }
 
         .screenshot {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 4rem;
         }
 
         .screenshot img {
             max-width: 100%;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 20px;
+            box-shadow: var(--shadow-hover);
+            transition: transform 0.3s ease;
+        }
+
+        .screenshot img:hover {
+            transform: scale(1.02);
         }
 
         /* Benefits Section */
         .benefits-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
+            gap: 2rem;
         }
 
         .benefit-card {
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            padding: 3rem;
+            border-radius: 20px;
             text-align: center;
-            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 195, 0, 0.1);
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 195, 0, 0.05), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .benefit-card:hover::before {
+            left: 100%;
         }
 
         .benefit-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
             box-shadow: var(--shadow-hover);
+            border-color: var(--primary-color);
         }
 
         .benefit-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease infinite;
+        }
+
+        .benefit-card:nth-child(1) .benefit-icon {
+            animation-delay: 0s;
+        }
+
+        .benefit-card:nth-child(2) .benefit-icon {
+            animation-delay: 0.5s;
+        }
+
+        .benefit-card:nth-child(3) .benefit-icon {
+            animation-delay: 1s;
         }
 
         .benefit-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--text-color);
+            font-weight: 700;
         }
 
         .benefit-card p {
             color: var(--text-light);
-            line-height: 1.6;
+            line-height: 1.8;
+            font-size: 1.1rem;
         }
 
         /* Pricing Section */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 800px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         .pricing-card {
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
+            padding: 3rem;
+            border-radius: 20px;
             text-align: center;
             position: relative;
+            overflow: hidden;
             border: 2px solid transparent;
             transition: all 0.3s ease;
+            background-clip: padding-box;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
         }
 
         .pricing-card:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
         }
 
         .pricing-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             color: var(--text-color);
+            font-weight: 700;
         }
 
         .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 10px;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
         }
 
         .price-note {
             color: var(--text-light);
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
 
         .pricing-features {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
         }
 
         .pricing-features li {
-            margin-bottom: 8px;
+            margin-bottom: 1rem;
             color: var(--text-light);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .pricing-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         /* Demo Section */
         .demo-content {
             text-align: center;
-            background: white;
-            padding: 60px 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            max-width: 600px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            border-radius: 30px;
+            max-width: 700px;
             margin: 0 auto;
+            border: 1px solid var(--glass-border);
         }
 
         .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background: var(--bg-light);
-            border: 2px dashed var(--border-color);
-            margin: 0 auto 20px;
+            width: 250px;
+            height: 250px;
+            background: white;
+            border: 3px dashed var(--primary-color);
+            margin: 0 auto 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
             color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .qr-placeholder:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
         }
 
         /* Company Section */
         .company-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 4rem;
         }
 
-        .company-info {
+        .company-info, .contact-form {
             background: white;
-            padding: 40px;
-            border-radius: 12px;
+            padding: 3rem;
+            border-radius: 20px;
             box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
         }
 
-        .company-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        .company-info:hover, .contact-form:hover {
+            transform: translateY(-5px);
+        }
+
+        .company-info h3, .contact-form h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
             color: var(--text-color);
+            font-weight: 700;
         }
 
         .company-info dl {
             display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 10px 20px;
+            grid-template-columns: 140px 1fr;
+            gap: 1rem 2rem;
         }
 
         .company-info dt {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-color);
         }
 
@@ -391,38 +733,33 @@
             color: var(--text-light);
         }
 
-        .contact-form {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .contact-form h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
             color: var(--text-color);
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
             font-size: 1rem;
             font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 195, 0, 0.1);
         }
 
         .form-group textarea {
@@ -434,27 +771,73 @@
         .footer {
             background: var(--text-color);
             color: white;
-            padding: 40px 0;
+            padding: 3rem 0;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header .container {
+                padding: 0 1rem;
+            }
+
             .nav {
                 display: none;
             }
 
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
 
-            .hero .subtitle {
-                font-size: 1.1rem;
+            .hero-subtitle {
+                font-size: 1.2rem;
             }
 
             .hero-buttons {
                 flex-direction: column;
                 align-items: center;
+            }
+
+            .section {
+                padding: 4rem 0;
             }
 
             .section-title {
@@ -463,7 +846,7 @@
 
             .problems-solutions {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 2rem;
             }
 
             .benefits-grid {
@@ -472,23 +855,23 @@
 
             .company-grid {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 2rem;
             }
 
             .company-info dl {
                 grid-template-columns: 1fr;
-                gap: 5px;
+                gap: 0.5rem;
             }
 
-            .container {
-                padding: 0 15px;
+            .pricing-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
+    <header class="header" id="header">
         <div class="container">
             <a href="#" class="logo">DentLINE</a>
             <nav class="nav">
@@ -496,7 +879,7 @@
                 <a href="#benefits">メリット</a>
                 <a href="#pricing">料金</a>
                 <a href="#demo">デモ</a>
-                <a href="#company">会社概要</a>
+                <a href="#company">お問い合わせ</a>
             </nav>
         </div>
     </header>
@@ -505,12 +888,18 @@
     <main class="main">
         <!-- Hero Section -->
         <section class="hero">
+            <div class="hero-float" style="font-size: 4rem; opacity: 0.1;">💊</div>
+            <div class="hero-float" style="font-size: 3rem; opacity: 0.1;">🦷</div>
+            <div class="hero-float" style="font-size: 5rem; opacity: 0.1;">📱</div>
+            
             <div class="container">
-                <h1>歯科医院の予約・受付を<br>LINEでシンプルに</h1>
-                <p class="subtitle">患者様にも、スタッフにも、医院経営にもメリットをもたらす<br>LINE公式アカウント導入サービス</p>
-                <div class="hero-buttons">
-                    <a href="#demo" class="btn btn-primary">無料デモを見る</a>
-                    <a href="#company" class="btn btn-secondary">お問い合わせはこちら</a>
+                <div class="hero-content">
+                    <h1>歯科医院の予約・受付を<br>LINEでシンプルに</h1>
+                    <p class="hero-subtitle">患者様にも、スタッフにも、医院経営にもメリットをもたらす<br>次世代のLINE公式アカウント導入サービス</p>
+                    <div class="hero-buttons">
+                        <a href="#demo" class="btn btn-primary">無料デモを体験</a>
+                        <a href="#company" class="btn btn-secondary">お問い合わせ</a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -518,52 +907,18 @@
         <!-- Service Section -->
         <section id="service" class="section">
             <div class="container">
-                <h2 class="section-title">サービス紹介</h2>
-                <div class="problems-solutions">
+                <h2 class="section-title scroll-reveal">サービス紹介</h2>
+                <p class="section-subtitle scroll-reveal">歯科医院の課題を解決し、患者様とのつながりを深める革新的なソリューション</p>
+                
+                <div class="problems-solutions scroll-reveal">
                     <div class="problems">
-                        <h3>歯科医院の課題</h3>
-                        <ul>
-                            <li>電話予約の対応がスタッフの負担になっている</li>
-                            <li>キャンセル率が高く、予約管理が大変</li>
-                            <li>定期健診のリマインドが不十分で再来院が少ない</li>
-                            <li>患者様との連絡手段が限られている</li>
-                        </ul>
+                        <h3>スタッフの業務効率化</h3>
+                        <p>電話対応時間を大幅削減し、本来の治療業務に集中できます。予約管理の自動化により、ミスを減らし業務品質を向上。スタッフのストレス軽減にも貢献します。</p>
                     </div>
-                    <div class="solutions">
-                        <h3>DentLINEで解決</h3>
-                        <ul>
-                            <li>LINE上で簡単に予約・変更・キャンセル</li>
-                            <li>自動リマインド機能でキャンセル率を大幅削減</li>
-                            <li>定期健診の時期をお知らせして再来院を促進</li>
-                            <li>患者様の身近なLINEで気軽にコミュニケーション</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="screenshot">
-                    <img src="https://via.placeholder.com/800x450/f8f9fa/333333?text=DentLINE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%A7%E3%83%83%E3%83%88" alt="DentLINE画面イメージ">
-                </div>
-            </div>
-        </section>
-
-        <!-- Benefits Section -->
-        <section id="benefits" class="section">
-            <div class="container">
-                <h2 class="section-title">3つのメリット</h2>
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-icon">👥</div>
-                        <h3>患者様に便利</h3>
-                        <p>24時間いつでもLINEから予約可能。電話が苦手な方や忙しい方でも気軽に予約できます。リマインド機能で予約忘れも防止できます。</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">⚡</div>
-                        <h3>スタッフに便利</h3>
-                        <p>電話対応の時間を大幅削減。予約管理が自動化されるため、患者様への治療に集中できます。業務効率が格段にアップします。</p>
-                    </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card scroll-reveal">
                         <div class="benefit-icon">📈</div>
-                        <h3>医院経営にメリット</h3>
-                        <p>キャンセル率の削減と再来院率の向上により、売上アップに貢献。患者満足度の向上で口コミ効果も期待できます。</p>
+                        <h3>医院経営の収益向上</h3>
+                        <p>キャンセル率削減と再来院率向上により、確実な売上アップを実現。患者満足度の向上は口コミ効果を生み、新規患者獲得にもつながります。投資対効果の高いソリューションです。</p>
                     </div>
                 </div>
             </div>
@@ -572,29 +927,32 @@
         <!-- Pricing Section -->
         <section id="pricing" class="section">
             <div class="container">
-                <h2 class="section-title">料金プラン</h2>
-                <p class="section-subtitle">シンプルでわかりやすい料金体系</p>
+                <h2 class="section-title scroll-reveal">明確な料金体系</h2>
+                <p class="section-subtitle scroll-reveal">追加費用なし、安心の定額制プラン</p>
+                
                 <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>初期費用</h3>
+                    <div class="pricing-card scroll-reveal">
+                        <h3>初期導入費用</h3>
                         <div class="price">5万円〜</div>
                         <p class="price-note">（税別・医院規模により変動）</p>
                         <ul class="pricing-features">
-                            <li>LINE公式アカウント設定</li>
-                            <li>予約システム構築</li>
-                            <li>スタッフ向け操作研修</li>
-                            <li>運用開始サポート</li>
+                            <li>LINE公式アカウント完全設定</li>
+                            <li>カスタム予約システム構築</li>
+                            <li>スタッフ向け操作研修（2回）</li>
+                            <li>運用開始までの徹底サポート</li>
+                            <li>初期データ移行サービス</li>
                         </ul>
                     </div>
-                    <div class="pricing-card">
-                        <h3>月額サポート</h3>
+                    <div class="pricing-card scroll-reveal">
+                        <h3>月額運用サポート</h3>
                         <div class="price">1〜3万円</div>
                         <p class="price-note">（税別・プランにより変動）</p>
                         <ul class="pricing-features">
-                            <li>システム運用・保守</li>
-                            <li>機能アップデート</li>
-                            <li>操作サポート</li>
-                            <li>データ分析レポート</li>
+                            <li>システム運用・保守・監視</li>
+                            <li>定期的な機能アップデート</li>
+                            <li>電話・チャットサポート対応</li>
+                            <li>月次データ分析レポート</li>
+                            <li>トラブル時の緊急対応</li>
                         </ul>
                     </div>
                 </div>
@@ -604,14 +962,14 @@
         <!-- Demo Section -->
         <section id="demo" class="section">
             <div class="container">
-                <h2 class="section-title">無料デモ体験</h2>
-                <div class="demo-content">
-                    <p style="margin-bottom: 30px; font-size: 1.2rem; color: var(--text-light);">実際のDentLINEの操作感を体験してみませんか？</p>
+                <h2 class="section-title scroll-reveal">無料デモ体験</h2>
+                <div class="demo-content scroll-reveal">
+                    <p style="margin-bottom: 2rem; font-size: 1.3rem; color: var(--text-light);">実際のDentLINEの使い心地を今すぐ体験</p>
                     <div class="qr-placeholder">
-                        <span>デモ用QRコード<br>（準備中）</span>
+                        <span>🚀 デモ用QRコード<br>（準備中）</span>
                     </div>
-                    <p style="margin-bottom: 30px;">上記QRコードをスマートフォンで読み取ると、デモ版をお試しいただけます。</p>
-                    <a href="#company" class="btn btn-primary">詳しい資料をご請求</a>
+                    <p style="margin-bottom: 2rem; font-size: 1.1rem;">上記QRコードをスマートフォンで読み取ると、<br>実際の操作感をお試しいただけます</p>
+                    <a href="#company" class="btn btn-primary">詳しい資料をダウンロード</a>
                 </div>
             </div>
         </section>
@@ -619,45 +977,49 @@
         <!-- Company Section -->
         <section id="company" class="section">
             <div class="container">
-                <h2 class="section-title">会社概要・お問い合わせ</h2>
+                <h2 class="section-title scroll-reveal">会社概要・お問い合わせ</h2>
                 <div class="company-grid">
-                    <div class="company-info">
+                    <div class="company-info scroll-reveal">
                         <h3>会社概要</h3>
                         <dl>
                             <dt>屋号</dt>
                             <dd>DentLINE</dd>
                             <dt>代表者</dt>
-                            <dd>飯尾 淳</dd>
+                            <dd>○○ ○○</dd>
                             <dt>所在地</dt>
-                            <dd>東京都世田谷区鎌田3-20-3</dd>
+                            <dd>〒XXX-XXXX<br>東京都○○区○○-○-○</dd>
+                            <dt>設立</dt>
+                            <dd>2024年4月</dd>
                             <dt>電話番号</dt>
-                            <dd>080-4450-7803</dd>
+                            <dd>03-0000-0000<br>（平日9:00-18:00）</dd>
                             <dt>メール</dt>
-                            <dd>dentline.jp@gmail.com</dd>
+                            <dd>info@dentline.jp</dd>
+                            <dt>事業内容</dt>
+                            <dd>歯科医院向けデジタル<br>ソリューション開発・提供</dd>
                         </dl>
                     </div>
-                    <div class="contact-form">
-                        <h3>お問い合わせフォーム</h3>
+                    <div class="contact-form scroll-reveal">
+                        <h3>お気軽にお問い合わせください</h3>
                         <form>
                             <div class="form-group">
                                 <label for="name">お名前 *</label>
-                                <input type="text" id="name" name="name" required>
+                                <input type="text" id="name" name="name" required placeholder="山田太郎">
                             </div>
                             <div class="form-group">
                                 <label for="clinic">医院名</label>
-                                <input type="text" id="clinic" name="clinic">
+                                <input type="text" id="clinic" name="clinic" placeholder="○○歯科クリニック">
                             </div>
                             <div class="form-group">
                                 <label for="email">メールアドレス *</label>
-                                <input type="email" id="email" name="email" required>
+                                <input type="email" id="email" name="email" required placeholder="example@clinic.com">
                             </div>
                             <div class="form-group">
                                 <label for="phone">電話番号</label>
-                                <input type="tel" id="phone" name="phone">
+                                <input type="tel" id="phone" name="phone" placeholder="03-0000-0000">
                             </div>
                             <div class="form-group">
                                 <label for="message">お問い合わせ内容</label>
-                                <textarea id="message" name="message" placeholder="ご質問やご相談内容をお書きください"></textarea>
+                                <textarea id="message" name="message" placeholder="デモのご希望、導入に関するご質問など、お気軽にお書きください"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary" style="width: 100%;">送信する</button>
                         </form>
@@ -670,8 +1032,162 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 DentLINE. All rights reserved.</p>
+            <p style="position: relative; z-index: 1;">&copy; 2025 DentLINE. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all scroll-reveal elements
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = 80;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Form submission enhancement
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (!data.name || !data.email) {
+                alert('お名前とメールアドレスは必須項目です。');
+                return;
+            }
+            
+            // Simulate form submission
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = '送信中...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('お問い合わせありがとうございます。\n24時間以内にご連絡いたします。');
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+
+        // Add some interactive particle effects
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.pointerEvents = 'none';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.backgroundColor = '#00C300';
+            particle.style.borderRadius = '50%';
+            particle.style.opacity = '0.6';
+            particle.style.zIndex = '999';
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight + 10;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0px)', opacity: 0.6 },
+                { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: 0 }
+            ], {
+                duration: 3000 + Math.random() * 2000,
+                easing: 'ease-out'
+            });
+            
+            animation.addEventListener('finish', () => {
+                particle.remove();
+            });
+        }
+
+        // Create particles occasionally
+        setInterval(createParticle, 2000);
+    </script>
 </body>
-</html>
+</html>>従来の課題</h3>
+                        <ul>
+                            <li>電話予約の対応がスタッフの大きな負担</li>
+                            <li>キャンセル率が高く予約管理が困難</li>
+                            <li>定期健診リマインドが不十分</li>
+                            <li>患者様との連絡手段が限定的</li>
+                            <li>予約の空き状況が見えにくい</li>
+                        </ul>
+                    </div>
+                    <div class="solutions">
+                        <h3>DentLINEの解決策</h3>
+                        <ul>
+                            <li>LINE上で24時間いつでも予約可能</li>
+                            <li>自動リマインドでキャンセル率を大幅削減</li>
+                            <li>定期健診の時期を自動でお知らせ</li>
+                            <li>身近なLINEで気軽にコミュニケーション</li>
+                            <li>リアルタイムで予約状況を確認</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="screenshot scroll-reveal">
+                    <img src="https://via.placeholder.com/1000x600/f8f9fa/333333?text=DentLINE%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E7%94%BB%E9%9D%A2" alt="DentLINE画面イメージ">
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="section">
+            <div class="container">
+                <h2 class="section-title scroll-reveal">3つの大きなメリット</h2>
+                <p class="section-subtitle scroll-reveal">すべてのステークホルダーにWin-Winの価値を提供</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card scroll-reveal">
+                        <div class="benefit-icon">😊</div>
+                        <h3>患者様の利便性向上</h3>
+                        <p>24時間いつでもスマートフォンから簡単予約。待ち時間や電話の煩わしさから解放され、忙しい現代人にぴったりの予約システムです。自動リマインドで予約忘れも防げます。</p>
+                    </div>
+                    <div class="benefit-card scroll-reveal">
+                        <div class="benefit-icon">⚡</div>
+                        <h3
