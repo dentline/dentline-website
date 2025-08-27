@@ -419,7 +419,7 @@
             margin-right: auto;
         }
 
-        /* Service Section */
+        /* Service Section - Fixed */
         .problems-solutions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -470,8 +470,6 @@
             position: relative;
             font-size: 1.1rem;
             line-height: 1.6;
-            word-break: keep-all;
-            overflow-wrap: break-word;
         }
 
         .problems li:before {
@@ -520,6 +518,7 @@
             overflow: hidden;
             transition: all 0.3s ease;
             border: 1px solid rgba(0, 195, 0, 0.1);
+            box-shadow: var(--shadow);
         }
 
         .benefit-card::before {
@@ -593,6 +592,7 @@
             border: 2px solid transparent;
             transition: all 0.3s ease;
             background-clip: padding-box;
+            box-shadow: var(--shadow);
         }
 
         .pricing-card::before {
@@ -674,26 +674,6 @@
             max-width: 700px;
             margin: 0 auto;
             border: 1px solid var(--glass-border);
-        }
-
-        .qr-placeholder {
-            width: 250px;
-            height: 250px;
-            background: white;
-            border: 3px dashed var(--primary-color);
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            font-size: 1.2rem;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-        }
-
-        .qr-placeholder:hover {
-            background: var(--primary-light);
-            transform: scale(1.05);
         }
 
         /* Company Section */
@@ -929,11 +909,6 @@
             .demo-content {
                 padding: 3rem 2rem;
             }
-
-            .qr-placeholder {
-                width: 200px;
-                height: 200px;
-            }
         }
     </style>
 </head>
@@ -980,13 +955,54 @@
                 
                 <div class="problems-solutions scroll-reveal">
                     <div class="problems">
+                        <h3>従来の課題</h3>
+                        <ul>
+                            <li>電話予約の対応がスタッフの大きな負担</li>
+                            <li>キャンセル率が高く予約管理が困難</li>
+                            <li>定期健診リマインドが不十分</li>
+                            <li>患者様との連絡手段が限定的</li>
+                            <li>予約の空き状況が見えにくい</li>
+                        </ul>
+                    </div>
+                    <div class="solutions">
+                        <h3>DentLINEの解決策</h3>
+                        <ul>
+                            <li>LINE上で24時間いつでも予約可能</li>
+                            <li>自動リマインドでキャンセル率を大幅削減</li>
+                            <li>定期健診の時期を自動でお知らせ</li>
+                            <li>身近なLINEで気軽にコミュニケーション</li>
+                            <li>リアルタイムで予約状況を確認</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="screenshot scroll-reveal">
+                    <img src="https://via.placeholder.com/1000x600/f8f9fa/333333?text=DentLINE%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E7%94%BB%E9%9D%A2" alt="DentLINE画面イメージ" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="section">
+            <div class="container">
+                <h2 class="section-title scroll-reveal">3つの大きなメリット</h2>
+                <p class="section-subtitle scroll-reveal">すべてのステークホルダーにWin-Winの価値を提供</p>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-card scroll-reveal">
+                        <div class="benefit-icon">😊</div>
+                        <h3>患者様の利便性向上</h3>
+                        <p>24時間いつでもスマートフォンから簡単予約。待ち時間や電話の煩わしさから解放され、忙しい現代人にぴったりの予約システムです。自動リマインドで予約忘れも防げます。</p>
+                    </div>
+                    <div class="benefit-card scroll-reveal">
+                        <div class="benefit-icon">⚡</div>
                         <h3>スタッフの業務効率化</h3>
-                        <p>電話対応時間を大幅削減し、本来の治療業務に集中できます。予約管理の自動化により、ミスを減らし業務品質を向上。スタッフのストレス軽減にも貢献します。</p>
+                        <p>電話対応時間を大幅削減し、本来の治療や患者ケアに集中できます。予約管理の自動化により、ダブルブッキングや予約漏れのリスクも軽減されます。</p>
                     </div>
                     <div class="benefit-card scroll-reveal">
                         <div class="benefit-icon">📈</div>
-                        <h3>医院経営の収益向上</h3>
-                        <p>キャンセル率削減と再来院率向上により、確実な売上アップを実現。患者満足度の向上は口コミ効果を生み、新規患者獲得にもつながります。投資対効果の高いソリューションです。</p>
+                        <h3>医院経営の最適化</h3>
+                        <p>キャンセル率の削減により稼働率が向上。定期健診のリマインド機能で継続率もアップ。データ分析により予約パターンの把握と最適化が可能になります。</p>
                     </div>
                 </div>
             </div>
@@ -1216,74 +1232,5 @@
         // Create particles occasionally
         setInterval(createParticle, 2000);
     </script>
-</body>
-
-    <!-- Service Section -->
-    <section id="service" class="section">
-        <div class="container">
-            <h2 class="section-title scroll-reveal">サービス紹介</h2>
-            <p class="section-subtitle scroll-reveal">
-            歯科医院の課題を解決し、患者様とのつながりを深める革新的なソリューション
-            </p>
-
-            <div class="problems-solutions scroll-reveal">
-            <div class="problems">
-                <h3>従来の課題</h3>
-                <ul>
-                <li>電話予約の対応がスタッフの大きな負担</li>
-                <li>キャンセル率が高く予約管理が困難</li>
-                <li>定期健診リマインドが不十分</li>
-                <li>患者様との連絡手段が限定的</li>
-                <li>予約の空き状況が見えにくい</li>
-                </ul>
-            </div>
-
-            <div class="solutions">
-                <h3>DentLINEの解決策</h3>
-                <ul>
-                <li>LINE上で24時間いつでも予約可能</li>
-                <li>自動リマインドでキャンセル率を大幅削減</li>
-                <li>定期健診の時期を自動でお知らせ</li>
-                <li>身近なLINEで気軽にコミュニケーション</li>
-                <li>リアルタイムで予約状況を確認</li>
-                </ul>
-            </div>
-            </div>
-
-            <div class="screenshot scroll-reveal">
-            <img
-                src="https://via.placeholder.com/1000x600/f8f9fa/333333?text=DentLINE%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E7%94%BB%E9%9D%A2"
-                alt="DentLINE画面イメージ"
-            />
-            </div>
-        </div>
-    </section>
-
-
-    <!-- Benefits Section -->
-    <section id="benefits" class="section">
-        <div class="container">
-            <h2 class="section-title scroll-reveal">3つの大きなメリット</h2>
-            <p class="section-subtitle scroll-reveal">すべてのステークホルダーにWin-Winの価値を提供</p>
-            
-            <div class="benefits-grid">
-                <div class="benefit-card scroll-reveal">
-                    <div class="benefit-icon">😊</div>
-                    <h3>患者様の利便性向上</h3>
-                    <p>24時間いつでもスマートフォンから簡単予約。待ち時間や電話の煩わしさから解放され、忙しい現代人にぴったりの予約システムです。自動リマインドで予約忘れも防げます。</p>
-                </div>
-                <div class="benefit-card scroll-reveal">
-                    <div class="benefit-icon">⚡</div>
-                    <h3>スタッフの業務効率化</h3>
-                    <p>電話対応時間を大幅削減し、本来の治療や患者ケアに集中できます。予約管理の自動化により、ダブルブッキングや予約漏れのリスクも軽減されます。</p>
-                </div>
-                <div class="benefit-card scroll-reveal">
-                    <div class="benefit-icon">📈</div>
-                    <h3>医院経営の最適化</h3>
-                    <p>キャンセル率の削減により稼働率が向上。定期健診のリマインド機能で継続率もアップ。データ分析により予約パターンの把握と最適化が可能になります。</p>
-                </div>
-            </div>
-        </div>
-    </section>
 </body>
 </html>
